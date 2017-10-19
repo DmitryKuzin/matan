@@ -16,11 +16,10 @@ public class ZipArchiver {
 
         try (FileOutputStream fileOs = new FileOutputStream(outputZipFile);
              ZipOutputStream zipOs = new ZipOutputStream(fileOs)) {
-            String filePath = inputDirPath;
-            String entryName = filePath.split("\\\\")[filePath.split("\\\\").length-1];
+            String entryName = inputDirPath.split("\\\\")[inputDirPath.split("\\\\").length-1];
             ZipEntry ze = new ZipEntry(entryName);
             zipOs.putNextEntry(ze);
-            FileInputStream fileIs = new FileInputStream(filePath);
+            FileInputStream fileIs = new FileInputStream(inputDirPath);
             int len;
             while ((len = fileIs.read(buffer)) > 0) {
                 zipOs.write(buffer, 0, len);
