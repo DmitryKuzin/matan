@@ -1,4 +1,8 @@
+import archiver.AbstractArchiver;
+import archiver.HaffmanArchiver;
 import archiver.ShannonFanoArchiver;
+import sun.security.provider.SHA;
+import utils.ByteUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,25 +16,68 @@ public class Main {
         String input = "";
 
         while(!input.equals("exit")) {
-            System.out.println("Insert path to read from :");
+            System.out.println("->");
 
             input = sc.next();
+
 
             if(input.equals("exit")) {
                 return;
             }
 
-            File file = new File(input);
+            if(input.equals("-a")) {
+
+                System.out.println("Insert path to read from :");
+
+                input = sc.next();
+
+                File file = new File(input);
+
+                System.out.println("2 sym mode ?");
+                input = sc.next();
+
+                boolean twoSymbMode = false;
+
+                if(input.equals("y")) {
+                    twoSymbMode = true;
+                }
 
 
-            ShannonFanoArchiver.archive(file);
+                AbstractArchiver archiver = new ShannonFanoArchiver();
+                archiver.archive(file, twoSymbMode);
 
-            File zip = new File(file.getPath()+".zip");
+                String fileExt = "";
 
-            System.out.println("Uncompressed size: "+ file.length()+" bytes" + " | " + (double)file.length()/1024.0/1024.0 + " MB");
-            System.out.println("Compressed size: "+ zip.length()+ " bytes"+ " | " + (double)zip.length()/1024.0/1024.0 + " MB");
+                if(twoSymbMode) {
+                    fileExt = "2symb.bin";
+                }else {
+                    fileExt = "1symb.bin";
+                }
 
-            System.out.println("uncompressed/compressed: " + (double)file.length()/(double)zip.length());
+                String fileWithOutExtension = file.getPath().substring(0, file.getPath().indexOf("."));
+
+                File archieved = new File(fileWithOutExtension+fileExt);
+
+                System.out.println("Uncompressed size: "+ file.length()+" bytes" + " | " + (double)file.length()/1024.0/1024.0 + " MB");
+                System.out.println("Compressed size: "+ archieved.length()+ " bytes"+ " | " + (double)archieved.length()/1024.0/1024.0 + " MB");
+
+                System.out.println("uncompressed/compressed: " + (double)file.length()/(double)archieved.length());
+            }
+
+            if(input.equals("-dea")) {
+
+                System.out.println("Insert path to read from :");
+
+                input = sc.next();
+
+                File file = new File(input);
+
+                String s = ShannonFanoArchiver.deArchive(file);
+
+                System.out.println(s);
+            }
+
+
         }
     }
 }
